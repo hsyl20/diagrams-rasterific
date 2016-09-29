@@ -31,6 +31,8 @@ import           Diagrams.TwoD.Text        hiding (Font)
 import           Data.FileEmbed            (embedDir)
 import           Data.ByteString           (ByteString)
 import           Data.ByteString.Lazy      (fromStrict)
+import           Data.Typeable
+import           Data.Monoid.Recommend
 
 -- | Get the 'BoundingBox' for some font with the origin at the start of
 --   the baseline.
@@ -42,12 +44,16 @@ textBoundingBox f p s = fromCorners
     r2f = fmap realToFrac
     bb = stringBoundingBox f 96 p s
 
+recommendFontSize :: (N a ~ n, Typeable n, HasStyle a) => Measure n -> a -> a
+recommendFontSize = applyMAttr . fmap (FontSize . Recommend . Last)
+
 -- | Create a primitive text diagram from the given 'FontSlant',
 --   'FontWeight', and string, with baseline alignment, envelope and trace
 --   based on the 'BoundingBox' of the text.
 texterific' :: (TypeableFloat n, Renderable (Text n) b)
             => FontSlant -> FontWeight -> String -> QDiagram b V2 n Any
-texterific' fs fw s = recommendFillColor black . fontSizeL 1
+texterific' fs fw s = recommendFillColor black
+                    . recommendFontSize (local 1)
                     . fontSlant fs . fontWeight fw
                     $ mkQD (Prim $ Text mempty BaselineText s)
                            (getEnvelope bb)

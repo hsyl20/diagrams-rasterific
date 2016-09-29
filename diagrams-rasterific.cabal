@@ -39,7 +39,8 @@ library
                        filepath >= 1.2 && < 1.5,
                        optparse-applicative >= 0.10 && < 0.13,
                        bytestring >= 0.9 && < 0.11,
-                       file-embed >= 0.0 && < 0.1
+                       file-embed >= 0.0 && < 0.1,
+                       monoid-extras >= 0.3 && < 0.5
 
   default-language:    Haskell2010
   ghc-options:         -Wall
