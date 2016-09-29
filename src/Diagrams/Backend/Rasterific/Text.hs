@@ -47,7 +47,8 @@ textBoundingBox f p s = fromCorners
 --   based on the 'BoundingBox' of the text.
 texterific' :: (TypeableFloat n, Renderable (Text n) b)
             => FontSlant -> FontWeight -> String -> QDiagram b V2 n Any
-texterific' fs fw s = recommendFillColor black . fontSizeL 1
+texterific' fs fw s = recommendFillColor black
+                    . recommendFontSize (local 1)
                     . fontSlant fs . fontWeight fw
                     $ mkQD (Prim $ Text mempty BaselineText s)
                            (getEnvelope bb)
